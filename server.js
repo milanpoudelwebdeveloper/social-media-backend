@@ -1,9 +1,9 @@
-import express from "express";
-import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import cors from "cors";
-import fs from "fs";
-import morgan from "morgan";
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const fs = require("fs");
+const morgan = require("morgan");
 
 require("dotenv").config();
 
@@ -12,7 +12,10 @@ const app = express();
 
 //db
 mongoose
-  .connect(process.env.DATABASE)
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("DB is connected successfully"))
   .catch((e) => console.log("Database connection error", e));
 
