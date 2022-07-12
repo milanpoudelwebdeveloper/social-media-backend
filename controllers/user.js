@@ -17,11 +17,16 @@ exports.getUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const id = req.params.id;
-  const { currentUserId, currentAdminStatus } = req.body;
+  const { currentUserId, currentAdminStatus, password } = req.body;
 
   //need to verify all info so that only authorized users can update their info
   if (id === currentUserId || currentAdminStatus) {
     try {
+      //if they want to update their password
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(password, salt);
+      }
       const updatedInfo = await User.findByIdAndUpdate(id, req.body, {
         new: true,
       });
