@@ -19,9 +19,34 @@ exports.followUser = async (req, res) => {
       await User.findByIdAndUpdate(currentUserId, {
         $push: { following: id },
       });
+      res.status(200).send("User followed successfully");
     } catch (e) {
       console.log(e);
       res.status(400).send("Something went wrong while following user", e);
+    }
+  }
+};
+
+exports.unfollowUser = async (req, res) => {
+  const userToUnfollowId = req.params.id;
+  const { currentUserId } = req.body;
+
+  if (userToUnfollow === currentUserId) {
+    return res
+      .status(403)
+      .send("You can't unfollow yourself, action forbidden");
+  } else {
+    try {
+      await user.findByIdAndUpdate(userToUnfollowId, {
+        $pull: { followers: currentUserId },
+      });
+      await user.findByIdAndUpdate(currentUserId, {
+        $pull: { following: userToUnfollowId },
+      });
+      res.status(200).send("User unfollowed successfully");
+    } catch (e) {
+      console.log(e);
+      res.status(400).send("Something went wrong while unfollowing user", e);
     }
   }
 };
